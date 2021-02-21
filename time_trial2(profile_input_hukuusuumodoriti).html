@@ -1,0 +1,224 @@
+﻿<!DOCTYPE html>
+
+<html lang="ja">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="Sample illustrating the use of Web Bluetooth / Notifications.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>1000m time trial(profile input)</title>
+
+
+    </head>
+
+    <body>
+
+        <!-- <h1>1000m Time Trial by Cycle Rollers</h1>-->
+
+
+
+        <canvas class="test" id="canvas" width="600" height="300"></canvas>
+
+        <form name="form1">
+            <p>
+                Profile Input
+            </p>
+            <p>
+                Name:<br />
+                <input type="text" name="your_name" value="">
+            </p>
+
+            <p>
+                Tyre Circumference( mm ) ex. 700x23c --> 2096mm<br />
+                <input type="number" name="t_c" value="">
+            </p>
+            <p>
+                Gear Ratio( ex. 44/14 ) (optional)<br />
+                <input type="number" name="front" value="Front">/<input type="number" name="rear" value="Rear">
+            </p>
+
+            <p>
+                Place (optional)<br />
+                <input type="text" name="place" value="">
+            </p>
+            <p>
+                Gender (optional)<br />
+                <label><input type="radio" name="gender" value="male"> male</label>
+                <label><input type="radio" name="gender" value="female"> female</label>
+            </p>
+            <p>
+                Age (optional)<br />
+                <label><input type="radio" name="age" value=" under 20 "> under 20</label>
+                <label><input type="radio" name="age" value=" 20 -40 "> 20 - 40</label>
+                <label><input type="radio" name="age" value=" 40 - 60 "> 40 - 60</label>
+                <label><input type="radio" name="age" value=" 60 - 80 "> 60 - 80</label>
+                <label><input type="radio" name="age" value=" over 80 "> over 80</label>
+            </p>
+        </form>
+
+        <p>
+            <input type="button" value="Confirm" onclick="clickBtn1()">
+            <input type="button" value="Display" onclick="clickBtn2()">
+
+        </p>
+
+        <video controls id="video" width=800 height=600>
+        </video>
+        <button onClick="drawVideo()">スキャン</button>
+        <button onClick="startVideo()">録画開始</button>
+        <button onClick="stopVideo()">録画停止</button>
+        <p><a href="#" id="downloadlink" style="display:none;">ダウンロード</a></p>
+
+
+        <script>
+            var video = document.getElementById("video");
+            // getUserMedia によるカメラ映像の取得
+            var media = navigator.mediaDevices.getUserMedia({
+                video: true,//ビデオを取得する
+                //使うカメラをインカメラか背面カメラかを指定する場合には
+                //video: { facingMode: "environment" },//背面カメラ
+                //video: { facingMode: "user" },//インカメラ
+                audio: false,//音声が必要な場合はture
+            });
+            //リアルタイムに再生（ストリーミング）させるためにビデオタグに流し込む
+            media.then((stream) => {
+                video.srcObject = stream;
+            });
+            function drawVideo() {
+                var video = document.getElementById("video");
+                var canvas = document.getElementById("canvas");
+                canvas.getContext("2d").drawImage(video, 290, 30, 300, 225);
+                requestAnimationFrame(drawVideo);
+            }
+        </script>
+
+        <script>
+            var ctx;
+            var frames;
+            var recorder;
+
+            function startVideo() {
+                //canvasの取得
+                canvas = document.getElementById('canvas');
+                ctx = canvas.getContext('2d');
+                //canvasからストリームを取得
+                var stream = canvas.captureStream();
+                //ストリームからMediaRecorderを生成
+                recorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
+                //ダウンロード用のリンクを準備
+                var anchor = document.getElementById('downloadlink');
+                //録画終了時に動画ファイルのダウンロードリンクを生成する処理
+                recorder.ondataavailable = function (e) {
+                    var videoBlob = new Blob([e.data], { type: e.data.type });
+                    blobUrl = window.URL.createObjectURL(videoBlob);
+                    anchor.download = 'movie.webm';
+                    anchor.href = blobUrl;
+                    anchor.style.display = 'block';
+                }
+                //録画開始
+                recorder.start();
+            }
+
+            function stopVideo() {
+
+                recorder.stop();
+            }
+
+        </script>
+        <script>
+            var canvas = document.getElementById('canvas');
+            var c = canvas.getContext('2d');
+
+            c.font = 'bold 20px serif';  // フォント
+            c.textAlign = 'left';               // 配置
+            c.fillText("1000m Time Trial by Cycle Rollers", 130, 20);
+            var w = $('.contents').width();
+            var h = $('.contents').height();
+            $('#canvas').attr('width', w);
+            $('#canvas').attr('height', h);
+
+
+            //    function expandCanvas() {
+            //        var b = document.body;
+            //       var d = document.documentElement;
+            //        canvas.width = Math.max(b.clientWidth, b.scrollWidth, d.scrollWidth, d.clientWidth);
+            //        canvas.height = Math.max(b.clientHeight, b.scrollHeight, d.scrollHeight, d.clientHeight);
+            //    }
+
+            //    expandCanvas();
+        </script>
+
+        <script>
+
+            function clickBtn1() {
+
+                var User_Name = "";
+                var Tyre_Circ = 2096;
+                var F_Gear = 0;
+                var R_Gear = 0;
+                var User_Place = "";
+                var User_Gender = "";
+                var User_Age = "";
+
+                User_Name = document.form1.your_name.value;
+                Tyre_Circ = document.form1.t_c.value;
+                F_Gear = document.form1.front.value;
+                R_Gear = document.form1.rear.value;
+                User_Place = document.form1.place.value;
+
+                const gender = document.form1.gender;
+                for (let i = 0; i < gender.length; i++) {
+                    if (gender[i].checked) {
+                        User_Gender = gender[i].value;
+                    }
+                }
+                const age = document.form1.age;
+                for (let i = 0; i < age.length; i++) {
+                    if (age[i].checked) {
+                        User_Age = age[i].value;
+                    }
+                }
+                return [User_Name, Tyre_Circ, F_Gear, R_Gear, User_Place, User_Gender, User_Age];
+
+            }
+
+            function clickBtn2() {
+
+                var [User_Name, Tyre_Circ, F_Gear, R_Gear, User_Place, User_Gender, User_Age] = clickBtn1();
+
+                c.clearRect(0, 30, 600, 270);
+                c.fillStyle = 'black';              // 塗りつぶしの色
+                c.fillText("Name", 10, 50);
+                c.fillText("Tyre_Circ", 10, 80);
+                c.fillText("Gear Ratio", 10, 110);
+                c.fillText("Place", 10, 140);
+                c.fillText("Gender", 10, 170);
+                c.fillText("Age", 10, 200);
+                c.fillText("Trial Date", 10, 230);
+                c.fillText("1000m Time", 10, 260);
+                c.fillText("Max. Speed", 10, 290);
+
+                c.fillText(User_Name, 110, 50);
+                c.fillText(Tyre_Circ.toString(), 110, 80);
+                c.fillText(F_Gear.toString() + "/" + R_Gear.toString(), 110, 110);
+                c.fillText(User_Place, 110, 140);
+                c.fillText(User_Gender, 110, 170);
+                c.fillText(User_Age, 110, 200);
+            }
+
+
+
+        </script>
+    </body>
+</html>
+
+<style>
+    .test {
+        width: 100%;
+        height: 100%;
+        background-color: #ccc; /* 背景色指定 */
+  
+    }
+</style>

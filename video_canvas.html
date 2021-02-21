@@ -1,0 +1,73 @@
+<html>
+<body>
+    <video controls id="video" width=1200 height=900>
+    </video>
+
+    <button onClick="drawVideo()">スキャン</button>
+    <button onClick="startVideo()">録画開始</button>
+    <button onClick="stopVideo()">録画停止</button>
+    <p><a href="#" id="downloadlink" style="display:none;">ダウンロード</a></p>
+
+    <canvas id="c" width=480 height=360></canvas>
+    <script>
+        var video = document.getElementById("video");
+        // getUserMedia によるカメラ映像の取得
+        var media = navigator.mediaDevices.getUserMedia({
+            video: true,//ビデオを取得する
+            //使うカメラをインカメラか背面カメラかを指定する場合には
+            //video: { facingMode: "environment" },//背面カメラ
+            //video: { facingMode: "user" },//インカメラ
+            audio: false,//音声が必要な場合はture
+        });
+        //リアルタイムに再生（ストリーミング）させるためにビデオタグに流し込む
+        media.then((stream) => {
+            video.srcObject = stream;
+        });
+        function drawVideo() {
+            var video = document.getElementById("video");
+            var canvas = document.getElementById("c");
+            canvas.getContext("2d").drawImage(video, 0, 0, 480, 360);
+            requestAnimationFrame(drawVideo);
+        }
+    </script>
+    <script>
+        var ctx;
+        var frames;
+        var recorder;
+
+        function startVideo() {
+            //canvasの取得
+            canvas = document.getElementById('c');
+            ctx = canvas.getContext('2d');
+            //canvasからストリームを取得
+            var stream = canvas.captureStream();
+            //ストリームからMediaRecorderを生成
+            recorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
+            //ダウンロード用のリンクを準備
+            var anchor = document.getElementById('downloadlink');
+            //録画終了時に動画ファイルのダウンロードリンクを生成する処理
+            recorder.ondataavailable = function (e) {
+                var videoBlob = new Blob([e.data], { type: e.data.type });
+                blobUrl = window.URL.createObjectURL(videoBlob);
+                anchor.download = 'movie.webm';
+                anchor.href = blobUrl;
+                anchor.style.display = 'block';
+            }
+            //録画開始
+            recorder.start();
+        }
+
+        function stopVideo() {
+ 
+                recorder.stop();
+            }
+        
+    </script>
+
+    <style>
+        video {
+            object-fit: fill;
+        }
+    </style>
+</body>
+</html>
