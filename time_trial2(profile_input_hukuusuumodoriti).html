@@ -73,6 +73,7 @@
 
 
         <script>
+            scrollTo(300, 0);
             var video = document.getElementById("video");
             // getUserMedia によるカメラ映像の取得
             var media = navigator.mediaDevices.getUserMedia({
@@ -87,7 +88,7 @@
                 video.srcObject = stream;
             });
             function drawVideo() {
-                var video = document.getElementById("video");
+             //   var video = document.getElementById("video");
                 var canvas = document.getElementById("canvas");
                 canvas.getContext("2d").drawImage(video, 290, 30, 300, 225);
                 requestAnimationFrame(drawVideo);
@@ -206,6 +207,7 @@
                 c.fillText(User_Place, 110, 140);
                 c.fillText(User_Gender, 110, 170);
                 c.fillText(User_Age, 110, 200);
+                scrollTo(0, 0);
             }
 
 
