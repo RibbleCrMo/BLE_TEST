@@ -230,7 +230,7 @@ limitations under the License.
             });
 
             drawVideo();
-            startVideo();
+
 
 
             word = "1000 meters time trial by cycle rollers. On your mark.";
@@ -302,6 +302,10 @@ limitations under the License.
                     str = String(Math.abs(i - 30));
                     c.textAlign = "end";
                     c.fillText(str, 380, 120);
+                }
+
+                if (i === 5) {
+                    startVideo();
                 }
                  
                 if ((5 < i) && (i < 25) && ((i % 5) === 0)) {
