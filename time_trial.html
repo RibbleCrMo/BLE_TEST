@@ -72,6 +72,11 @@ limitations under the License.
 
   
     <form name="form1">
+
+        <p>
+            <a href="#" id="downloadlink" style="display:none;">Download Video file</a>
+        </p>
+
         <p>
             Name:<br />
             <input type="text" name="your_name" value="" autofocus>
@@ -81,6 +86,7 @@ limitations under the License.
             Tyre Circumference( mm ) ex. 700x23c --> 2096mm<br />
             <input type="number" name="t_c" value="">
         </p>
+
         <p>
             Gear Ratio( ex. 44/14 ) (optional)<br />
             <input type="number" name="front" value="Front">/<input type="number" name="rear" value="Rear">
@@ -90,11 +96,13 @@ limitations under the License.
             Place (optional)<br />
             <input type="text" name="place" value="">
         </p>
+
         <p>
             Gender (optional)<br />
             <label><input type="radio" name="gender" value="male"> male</label>
             <label><input type="radio" name="gender" value="female"> female</label>
         </p>
+
         <p>
             Age (optional)<br />
             <label><input type="radio" name="age" value="under_20"> under 20</label>
@@ -107,6 +115,7 @@ limitations under the License.
         <p>
             <input type="button" value="Confirm" onclick="Profile_Input()">
         </p>
+
         <p>
             <button id="startNotifications">Connect speed sensor</button>
             <button id="stopNotifications">Disconnect speed sensor</button>
@@ -120,14 +129,9 @@ limitations under the License.
             <input type="button" value="Stop Video and Download" name="Stop Video and Download" onclick="stopVideo()">
         </p>
 
-        <p>
-            <a href="#" id="downloadlink" style="display:none;">Download Video file</a>
-        </p>
-
-
     </form>
 
-    <h3>BLE Status</h3>
+    <h3>BLE Sensor Status</h3>
     <div id="output" class="output">
         <div id="content"></div>
         <div id="status"></div>
