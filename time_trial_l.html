@@ -89,7 +89,7 @@ limitations under the License.
 
         <p>
             Gear Ratio( ex. 44/14 ) (optional)<br />
-            <input type="number" name="front" value="Front">/<input type="number" name="rear" value="Rear">
+            <input type="number" name="front" value="">/<input type="number" name="rear" value="">
         </p>
 
         <p>
@@ -165,9 +165,9 @@ limitations under the License.
         var T_sec_sensor_after;
         var T_sec_sensor_before;
         let T_sec_rollover = 0;
-        let Rot_Cum_min = 9999;
-        let Rot_Cum_after = 0;
-        let Rot_Cum_before = 0;
+        let Rot_Cum_min = 4294967295;
+        let Rot_Cum_after = 4294967295;
+        let Rot_Cum_before = 4294967295;
         //       let F = 0;
         let myStart = 0;
         let myStop = 0;
@@ -707,9 +707,9 @@ limitations under the License.
                 V = 0;
             }
 
-            //if (V > 200) {
-            //    V = 0;
-            //}
+            if (V > 200) {
+                V = 0;
+            }
 
  
             // log(D, V, V_max, Rot_Cum_before, Rot_Cum_after, Rot_Cum_min, T_sec_before, T_sec_after, T_sec_min);
@@ -723,7 +723,7 @@ limitations under the License.
             let d = new Date();
             let FOA = "";
             var [User_Name, Tyre_Circ, F_Gear, R_Gear, User_Place, User_Gender, User_Age] = Profile_Input();
-            let Goal_time = Math.round((T_end - T_sec_min) / 1024 * (1000 / D_end) * 100) / 100;
+            let Goal_time = Math.round((T_end - T_sec_min)  * (1000 / D_end) * 100) / 100;
 
             V_max = Math.round(V_max * 10) / 10;
             c.fillStyle = "white";
